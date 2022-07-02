@@ -1,7 +1,4 @@
-# This workflow will build a Java project with Maven, and cache/restore any dependencies to improve the workflow execution time
-# For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-maven
-
-name: Java CI with Maven
+name: Selenium Java Maven
 
 on:
   push:
@@ -27,7 +24,7 @@ jobs:
       uses: browser-actions/setup-chrome@latest
 
     - name: Test with Maven
-      run: mvn clean test
+      run: mvn clean test allure:report
 
     - name: Test Report
       uses: dorny/test-reporter@v1
@@ -37,3 +34,8 @@ jobs:
         path: ${{ github.workspace }}/target/surefire-reports/TEST-*.xml
         reporter: java-junit
         java-version: 11
+    - name: Archive test results
+      uses: actions/upload-artifact@v3
+      with:
+        name: allure report
+        path: ./target/site/allure-maven-plugin
